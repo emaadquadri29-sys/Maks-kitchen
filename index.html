@@ -288,6 +288,8 @@
   }
 </style>
 
+<canvas id="spiceCanvas" aria-hidden="true"></canvas>
+
 <header>
   <div class="header-inner">
     <a class="brand" href="#top" aria-label="Mak's Kitchen home">
@@ -873,4 +875,129 @@ searchClear.addEventListener("click", ()=>{
   searchBox.focus();
 });
 runSearch();
+
+/* ---------- falling spices, driven by scroll ---------- */
+(function(){
+  const spiceCanvas = document.getElementById("spiceCanvas");
+  if(!spiceCanvas || !spiceCanvas.getContext) return;
+  if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const sctx = spiceCanvas.getContext("2d");
+  const SPICE_COLORS = {
+    seed: ["#4a3220","#5b3a22","#3a2717"],
+    chili: "rgba(138,50,38,0.85)",
+    thread: "rgba(201,162,39,0.85)",
+  };
+  let sW, sH, dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let specks = [];
+
+  function srand(a,b){ return a + Math.random() * (b - a); }
+
+  function makeSpeck(){
+    const roll = Math.random();
+    const type = roll < 0.5 ? "seed" : (roll < 0.82 ? "chili" : "thread");
+    return {
+      x: srand(0, sW),
+      y: srand(0, sH),
+      size: type === "thread" ? srand(6, 11) : srand(2, 4),
+      rot: srand(0, Math.PI * 2),
+      vy: 0, vx: 0,
+      alpha: srand(0.10, 0.22),
+      type,
+      color: type === "seed" ? SPICE_COLORS.seed[(Math.random()*3)|0] : SPICE_COLORS[type],
+    };
+  }
+
+  function resizeSpices(){
+    sW = window.innerWidth; sH = window.innerHeight;
+    spiceCanvas.width = sW * dpr; spiceCanvas.height = sH * dpr;
+    spiceCanvas.style.width = sW + "px"; spiceCanvas.style.height = sH + "px";
+    sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const target = Math.max(18, Math.round((sW * sH) / 32000));
+    if(specks.length < target){
+      while(specks.length < target) specks.push(makeSpeck());
+    } else {
+      specks.length = target;
+    }
+  }
+
+  function drawSpecks(){
+    sctx.clearRect(0, 0, sW, sH);
+    specks.forEach(p=>{
+      sctx.save();
+      sctx.globalAlpha = p.alpha;
+      sctx.translate(p.x, p.y);
+      sctx.rotate(p.rot);
+      if(p.type === "thread"){
+        sctx.strokeStyle = p.color;
+        sctx.lineWidth = 1;
+        sctx.beginPath();
+        sctx.moveTo(-p.size / 2, 0);
+        sctx.quadraticCurveTo(0, srand(-1.5, 1.5), p.size / 2, 0);
+        sctx.stroke();
+      } else if(p.type === "chili"){
+        sctx.fillStyle = p.color;
+        sctx.beginPath();
+        sctx.moveTo(-p.size, 0);
+        sctx.quadraticCurveTo(0, -p.size * 1.3, p.size, -p.size * 0.2);
+        sctx.quadraticCurveTo(p.size * 0.3, p.size * 0.5, -p.size, 0);
+        sctx.fill();
+      } else {
+        sctx.fillStyle = p.color;
+        sctx.beginPath();
+        sctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+        sctx.fill();
+      }
+      sctx.restore();
+    });
+  }
+
+  const FRICTION = 0.93, MAX_V = 5;
+  let spiceRunning = false;
+
+  function spiceStep(){
+    let moving = false;
+    specks.forEach(p=>{
+      if(Math.abs(p.vy) > 0.01 || Math.abs(p.vx) > 0.01){
+        p.y += p.vy;
+        p.x += p.vx;
+        p.rot += p.vy * 0.015;
+        p.vy *= FRICTION;
+        p.vx *= FRICTION;
+        if(Math.abs(p.vy) < 0.01) p.vy = 0;
+        if(Math.abs(p.vx) < 0.01) p.vx = 0;
+        moving = true;
+      }
+      if(p.y - p.size > sH){ p.y = -p.size; p.x = srand(0, sW); }
+      if(p.y + p.size < 0){ p.y = sH + p.size; p.x = srand(0, sW); }
+    });
+    drawSpecks();
+    if(moving){
+      requestAnimationFrame(spiceStep);
+    } else {
+      spiceRunning = false;
+    }
+  }
+
+  function spiceKick(deltaY){
+    const clamped = Math.max(-90, Math.min(90, deltaY));
+    specks.forEach(p=>{
+      p.vy = Math.max(-MAX_V, Math.min(MAX_V, p.vy + clamped * 0.03 * srand(0.6, 1.3)));
+      p.vx = Math.max(-2, Math.min(2, p.vx + srand(-0.35, 0.35)));
+    });
+    if(!spiceRunning){ spiceRunning = true; requestAnimationFrame(spiceStep); }
+  }
+
+  let lastY = window.scrollY;
+  window.addEventListener("scroll", ()=>{
+    const y = window.scrollY;
+    const delta = y - lastY;
+    lastY = y;
+    if(delta !== 0) spiceKick(delta);
+  }, { passive: true });
+
+  window.addEventListener("resize", resizeSpices);
+  resizeSpices();
+  drawSpecks();
+})();
 </script>
