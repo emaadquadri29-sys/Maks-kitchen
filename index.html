@@ -1,0 +1,767 @@
+<title>Mak's Kitchen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Pinyon+Script&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-950:#0a1730;
+    --navy-900:#0e1e40;
+    --navy-800:#152a54;
+    --navy-700:#1c3468;
+    --navy-line:#2a3f70;
+    --gold-500:#c9a227;
+    --gold-400:#d9b64b;
+    --gold-300:#e6c877;
+    --cream-50:#faf6ec;
+    --cream-100:#f2ead6;
+    --cream-200:#e8dcbf;
+    --ink-900:#1d2436;
+    --ink-700:#3c4256;
+    --ink-500:#6b7086;
+    --green-600:#2f7a4f;
+    --maroon-600:#8a3226;
+    --amber-500:#b9821f;
+    --shadow:0 18px 40px -20px rgba(10,23,48,.45);
+    --maxw:920px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} }
+
+  body{
+    margin:0;
+    background:var(--navy-950);
+    color:var(--ink-900);
+    font-family:'Jost',system-ui,-apple-system,Segoe UI,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  h1,h2,h3{ font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif; margin:0; text-wrap:balance; }
+
+  a{ color:inherit; }
+  img{ max-width:100%; }
+
+  .pattern{
+    background-image:
+      linear-gradient(45deg, rgba(230,196,116,.05) 25%, transparent 25%, transparent 75%, rgba(230,196,116,.05) 75%),
+      linear-gradient(45deg, rgba(230,196,116,.05) 25%, transparent 25%, transparent 75%, rgba(230,196,116,.05) 75%),
+      radial-gradient(circle at 50% 50%, rgba(230,196,116,.06) 0 3px, transparent 4px);
+    background-size:52px 52px,52px 52px,26px 26px;
+    background-position:0 0,26px 26px,0 0;
+  }
+
+  .ornament{
+    display:flex; align-items:center; justify-content:center; gap:.6em;
+    color:var(--gold-400); font-size:.8rem; letter-spacing:.2em; margin:.6em 0 1.1em;
+  }
+  .ornament::before,.ornament::after{ content:""; height:1px; width:38px; background:linear-gradient(90deg,transparent,var(--gold-500)); }
+  .ornament::after{ background:linear-gradient(90deg,var(--gold-500),transparent); }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:40;
+    background:rgba(10,23,48,.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--navy-line);
+  }
+  .header-inner{
+    max-width:1180px; margin:0 auto; padding:.7rem 1.25rem;
+    display:flex; align-items:center; gap:1.25rem;
+  }
+  .brand{ display:flex; align-items:baseline; gap:.55rem; text-decoration:none; flex-shrink:0; }
+  .brand-word{ font-family:'Pinyon Script',cursive; color:var(--gold-400); font-size:1.9rem; line-height:1; }
+  .brand-sub{ display:none; }
+  @media (min-width:720px){
+    .brand-sub{ display:inline; font-size:.62rem; letter-spacing:.2em; color:var(--cream-200); text-transform:uppercase; }
+  }
+
+  nav.pills{
+    display:flex; gap:.4rem; overflow-x:auto; flex:1; scrollbar-width:none; padding:.15rem 0;
+  }
+  nav.pills::-webkit-scrollbar{ display:none; }
+  nav.pills a{
+    white-space:nowrap; text-decoration:none; color:var(--cream-200);
+    font-size:.78rem; letter-spacing:.03em; padding:.42rem .85rem; border-radius:999px;
+    border:1px solid transparent; transition:background .15s,border-color .15s,color .15s;
+  }
+  nav.pills a:hover{ color:var(--gold-300); }
+  nav.pills a.active{ background:rgba(201,162,39,.14); border-color:rgba(201,162,39,.55); color:var(--gold-300); }
+  nav.pills a:focus-visible{ outline:2px solid var(--gold-400); outline-offset:2px; }
+
+  .search-wrap{ position:relative; flex-shrink:0; }
+  .search-wrap input{
+    width:150px; background:var(--navy-800); border:1px solid var(--navy-line); color:var(--cream-50);
+    border-radius:999px; padding:.5rem .9rem .5rem 2.1rem; font-family:'Jost',sans-serif; font-size:.82rem;
+    transition:width .2s;
+  }
+  .search-wrap input:focus{ width:200px; outline:2px solid var(--gold-400); outline-offset:1px; }
+  .search-wrap input::placeholder{ color:var(--ink-500); }
+  .search-wrap svg{ position:absolute; left:.7rem; top:50%; transform:translateY(-50%); width:14px; height:14px; opacity:.6; pointer-events:none; }
+
+  /* ---------- hero ---------- */
+  .hero{
+    background:var(--navy-950); color:var(--cream-50); padding:3.4rem 1.25rem 2.6rem; text-align:center;
+    border-bottom:1px solid var(--navy-line);
+  }
+  .hero-eyebrow{
+    font-size:.72rem; letter-spacing:.32em; text-transform:uppercase; color:var(--gold-400); margin:0 0 1rem;
+  }
+  .hero h1{ font-size:clamp(2.7rem,7vw,4.6rem); color:var(--cream-50); font-weight:500; }
+  .hero-script{ font-family:'Pinyon Script',cursive; color:var(--gold-400); font-size:clamp(3.2rem,9vw,5.6rem); display:block; line-height:1; }
+  .hero-tag{ font-size:.85rem; letter-spacing:.14em; text-transform:uppercase; color:var(--cream-200); margin-top:.3rem; }
+  .hero p.lede{
+    max-width:520px; margin:1.3rem auto 0; color:var(--cream-200); font-size:1.02rem; line-height:1.7;
+  }
+  .chips{ display:flex; flex-wrap:wrap; gap:.55rem; justify-content:center; margin-top:1.5rem; }
+  .chip{
+    font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--gold-300);
+    border:1px solid rgba(201,162,39,.45); border-radius:999px; padding:.4rem .9rem;
+  }
+  .cta-row{ display:flex; flex-wrap:wrap; gap:.7rem; justify-content:center; margin-top:1.7rem; }
+  .btn{
+    font-family:'Jost',sans-serif; font-size:.82rem; letter-spacing:.05em; text-decoration:none;
+    padding:.72rem 1.4rem; border-radius:2px; display:inline-flex; align-items:center; gap:.5rem;
+    transition:transform .15s,box-shadow .15s;
+  }
+  .btn:focus-visible{ outline:2px solid var(--gold-400); outline-offset:2px; }
+  .btn-gold{ background:var(--gold-500); color:var(--navy-950); font-weight:600; }
+  .btn-gold:hover{ transform:translateY(-1px); box-shadow:0 10px 22px -8px rgba(201,162,39,.55); }
+  .btn-outline{ border:1px solid rgba(250,246,236,.35); color:var(--cream-50); }
+  .btn-outline:hover{ border-color:var(--gold-400); color:var(--gold-300); }
+
+  /* ---------- chef's picks ---------- */
+  .picks{ background:var(--navy-900); padding:2.6rem 1.25rem 3rem; border-bottom:1px solid var(--navy-line); }
+  .picks-head{ text-align:center; color:var(--cream-50); }
+  .picks-head span.eyebrow{ font-size:.72rem; letter-spacing:.3em; text-transform:uppercase; color:var(--gold-400); }
+  .picks-head h2{ font-size:clamp(1.7rem,4vw,2.3rem); color:var(--cream-50); font-weight:500; margin-top:.3rem; }
+  .pick-grid{
+    max-width:1080px; margin:1.8rem auto 0; display:grid; gap:1rem;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  }
+  .pick-card{
+    background:var(--navy-800); border:1px solid var(--navy-line); border-radius:3px; padding:1.1rem 1.2rem;
+    display:flex; flex-direction:column; gap:.4rem;
+  }
+  .pick-card .pk-top{ display:flex; justify-content:space-between; align-items:baseline; gap:.6rem; }
+  .pick-card .pk-name{ color:var(--cream-50); font-family:'Cormorant Garamond',serif; font-size:1.28rem; font-weight:600; }
+  .pick-card .pk-price{ color:var(--gold-300); font-variant-numeric:tabular-nums; font-size:.92rem; flex-shrink:0; }
+  .pick-card .pk-desc{ color:var(--cream-200); font-size:.85rem; line-height:1.55; margin:0; }
+  .pick-card .pk-tag{ font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:var(--gold-400); }
+
+  /* ---------- legend bar ---------- */
+  .legend{
+    background:var(--cream-100); border-bottom:1px solid var(--cream-200);
+    padding:.75rem 1.25rem; display:flex; flex-wrap:wrap; gap:1.1rem; justify-content:center;
+    font-size:.74rem; color:var(--ink-700); letter-spacing:.02em;
+  }
+  .legend .item{ display:flex; align-items:center; gap:.4rem; }
+
+  .dot{ width:11px; height:11px; border-radius:2px; display:inline-block; flex-shrink:0; position:relative; }
+  .dot::after{ content:""; position:absolute; inset:2.5px; border-radius:50%; }
+  .dot.v{ border:1.4px solid var(--green-600); } .dot.v::after{ background:var(--green-600); }
+  .dot.n{ border:1.4px solid var(--maroon-600); } .dot.n::after{ background:var(--maroon-600); }
+  .dot.e{ border:1.4px solid var(--amber-500); } .dot.e::after{ background:var(--amber-500); }
+  .dot.b{ border:1.4px solid var(--ink-500); background:linear-gradient(90deg,var(--green-600) 50%,var(--maroon-600) 50%); }
+  .dot.b::after{ display:none; }
+  .star{ color:var(--gold-500); }
+
+  /* ---------- menu ---------- */
+  main{ background:var(--cream-50); }
+  section.category{ scroll-margin-top:64px; }
+  .cat-banner{
+    background:var(--navy-950); color:var(--cream-50); padding:1.6rem 1.25rem 1.4rem; text-align:center;
+    position:relative;
+  }
+  .cat-banner h2{ font-size:clamp(1.9rem,4.4vw,2.6rem); color:var(--cream-50); font-weight:500; }
+  .cat-banner .cat-note{ color:var(--cream-200); font-size:.85rem; margin-top:.35rem; max-width:520px; margin-inline:auto; }
+
+  .cat-body{ max-width:var(--maxw); margin:0 auto; padding:2.2rem 1.25rem 1rem; }
+  .group{ margin-bottom:2.1rem; }
+  .group-title{
+    font-size:.78rem; letter-spacing:.16em; text-transform:uppercase; color:var(--maroon-600);
+    border-bottom:1px solid var(--cream-200); padding-bottom:.55rem; margin-bottom:.2rem;
+    display:flex; align-items:baseline; justify-content:space-between;
+  }
+  .group-title .gt-line{ flex:1; }
+
+  ul.dish-list{ list-style:none; margin:0; padding:0; }
+  li.dish{
+    display:grid; grid-template-columns:16px 1fr auto; gap:.75rem; align-items:start;
+    padding:.85rem 0; border-bottom:1px dashed var(--cream-200);
+  }
+  li.dish:last-child{ border-bottom:none; }
+  .dish-tag{ margin-top:.45rem; }
+  .dish-name{
+    font-family:'Cormorant Garamond',serif; font-weight:600; font-size:1.16rem; color:var(--navy-900);
+    display:flex; align-items:baseline; gap:.4rem; flex-wrap:wrap;
+  }
+  .dish-desc{ margin:.2rem 0 0; font-size:.85rem; color:var(--ink-500); font-style:italic; line-height:1.5; max-width:56ch; }
+  .dish-price{
+    font-variant-numeric:tabular-nums; color:var(--maroon-600); font-weight:600; font-size:.98rem;
+    white-space:nowrap; padding-top:.15rem; text-align:right;
+  }
+  .dish-price small{ display:block; font-weight:400; color:var(--ink-500); font-size:.68rem; letter-spacing:.04em; }
+
+  .no-hits{ display:none; text-align:center; color:var(--ink-500); font-size:.85rem; padding:1rem 0; font-style:italic; }
+  .price-note{ text-align:center; color:var(--ink-500); font-size:.75rem; padding:0 1.25rem 2.4rem; }
+
+  section.category.filtered-empty{ display:none; }
+  .group.filtered-empty{ display:none; }
+
+  /* ---------- footer ---------- */
+  footer{
+    background:var(--navy-950); color:var(--cream-200); padding:3rem 1.25rem 1.4rem; border-top:1px solid var(--navy-line);
+  }
+  .foot-grid{
+    max-width:1080px; margin:0 auto; display:grid; gap:2.2rem;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  }
+  .foot-grid h3{ color:var(--gold-400); font-size:1.15rem; font-weight:600; margin-bottom:.6rem; }
+  .foot-grid p, .foot-grid a{ font-size:.88rem; line-height:1.7; color:var(--cream-200); text-decoration:none; }
+  .foot-grid a:hover{ color:var(--gold-300); }
+  .foot-brand{ display:flex; flex-direction:column; gap:.4rem; }
+  .foot-brand .brand-word{ font-size:2.2rem; }
+  .foot-bottom{
+    max-width:1080px; margin:2.4rem auto 0; padding-top:1.2rem; border-top:1px solid var(--navy-line);
+    display:flex; flex-wrap:wrap; justify-content:space-between; gap:.6rem;
+    font-size:.72rem; color:var(--ink-500);
+  }
+
+  /* reveal on scroll */
+  .reveal{ opacity:0; transform:translateY(14px); transition:opacity .5s ease,transform .5s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+  @media (prefers-reduced-motion:reduce){ .reveal{ opacity:1; transform:none; transition:none; } }
+
+  @media (max-width:640px){
+    .header-inner{ flex-wrap:wrap; }
+    .search-wrap input,.search-wrap input:focus{ width:120px; }
+    li.dish{ grid-template-columns:14px 1fr; }
+    .dish-price{ grid-column:2; text-align:left; padding-top:0; }
+  }
+</style>
+
+<header>
+  <div class="header-inner">
+    <a class="brand" href="#top" aria-label="Mak's Kitchen home">
+      <span class="brand-word">Mak's Kitchen</span>
+      <span class="brand-sub">Multi&#8209;Cuisine</span>
+    </a>
+    <nav class="pills" id="pillNav" aria-label="Menu categories"></nav>
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input id="dishSearch" type="search" placeholder="Search a dish…" aria-label="Search the menu">
+    </div>
+  </div>
+</header>
+
+<div id="top"></div>
+<section class="hero pattern">
+  <p class="hero-eyebrow">Multi&#8209;Cuisine Restaurant &middot; Mehdipatnam, Hyderabad</p>
+  <h1><span class="hero-script">Mak's Kitchen</span></h1>
+  <p class="lede">Indian curries, Chinese wok fare, tandoor kebabs, biryani and seafood from the Marrel &mdash; one table, every craving. Browse the full menu below.</p>
+  <div class="chips">
+    <span class="chip">Separate Family Section</span>
+    <span class="chip">Take Away Available</span>
+  </div>
+  <div class="cta-row">
+    <a class="btn btn-gold" href="tel:+919030201028">Call to Reserve</a>
+    <a class="btn btn-outline" href="https://www.google.com/maps/search/?api=1&query=Mak%27s%20Kitchen%2C%2010-3-76%2C%204th%20Floor%2C%20Opp.%20Pillar%20No.%203%2C%20PVNR%20Expressway%2C%20Humayun%20Nagar%2C%20Mehdipatnam%20Road%2C%20Hyderabad%20-%2028" target="_blank" rel="noopener">Get Directions</a>
+    <a class="btn btn-outline" href="#menu-legend">View Full Menu</a>
+  </div>
+</section>
+
+<section class="picks">
+  <div class="picks-head">
+    <span class="eyebrow">From the Kitchen</span>
+    <h2>A Few House Favourites</h2>
+  </div>
+  <div class="pick-grid" id="pickGrid"></div>
+</section>
+
+<div class="legend" id="menu-legend">
+  <span class="item"><span class="dot v"></span> Vegetarian</span>
+  <span class="item"><span class="dot n"></span> Non&#8209;Vegetarian</span>
+  <span class="item"><span class="dot e"></span> Egg</span>
+  <span class="item"><span class="dot b"></span> Choice of Veg / Non&#8209;Veg</span>
+  <span class="item"><span class="star">&#10022;</span> Our Speciality</span>
+</div>
+
+<main id="menuRoot"></main>
+
+<p class="no-hits" id="globalNoHits">No dishes match your search. Try a different word.</p>
+<p class="price-note">*Prices are exclusive of applicable taxes.</p>
+
+<footer>
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <span class="brand-word">Mak's Kitchen</span>
+      <p>Multi&#8209;Cuisine Restaurant</p>
+    </div>
+    <div>
+      <h3>Visit Us</h3>
+      <p>10&#8209;3&#8209;76, 4th Floor, Opp. Pillar No. 3,<br>PVNR Expressway, Humayun Nagar,<br>Mehdipatnam Road, Hyderabad &#8211; 28</p>
+      <p><a href="https://www.google.com/maps/search/?api=1&query=Mak%27s%20Kitchen%2C%2010-3-76%2C%204th%20Floor%2C%20Opp.%20Pillar%20No.%203%2C%20PVNR%20Expressway%2C%20Humayun%20Nagar%2C%20Mehdipatnam%20Road%2C%20Hyderabad%20-%2028" target="_blank" rel="noopener">Get Directions &rarr;</a></p>
+    </div>
+    <div>
+      <h3>Reach Us</h3>
+      <p><a href="tel:+919030201028">+91 90302 01028</a></p>
+      <p><a href="mailto:makskitchen001@gmail.com">makskitchen001@gmail.com</a></p>
+    </div>
+    <div>
+      <h3>Good to Know</h3>
+      <p>Separate family section</p>
+      <p>Take away available</p>
+      <p>All prices exclusive of taxes</p>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>&copy; Mak's Kitchen</span>
+    <span>Menu digitised for the web from the in&#8209;house printed card.</span>
+  </div>
+</footer>
+
+<script>
+const MENU = [
+{ id:"soups", label:"Soups & Starters", note:"Broths and small plates to open the meal.", groups:[
+  { title:"Soups &middot; Chicken", items:[
+    {n:"Chicken Clear Soup", d:"Thin slices of chicken cooked in stock.", p:"130", t:"n"},
+    {n:"Chicken Corn Soup", d:"A thick soup made with smashed corn & chicken.", p:"130", t:"n"},
+    {n:"Chicken Hot & Sour Soup", d:"Shredded chicken with vegetables cooked in soya, chilly & vinegar.", p:"130", t:"n"},
+    {n:"Chicken Canton Soup", d:"Minced chicken cooked with diced vegetables in cantonese style.", p:"130", t:"n"},
+    {n:"Manchow Soup", d:"A thick soya-based broth with diced vegetables & chicken, topped with fried noodles.", p:"130", t:"n", s:1},
+  ]},
+  { title:"Soups &middot; Vegetarian", items:[
+    {n:"Vegetable Clear Soup", p:"145", t:"v"},
+    {n:"Vegetable Hot & Sour Soup", p:"145", t:"v"},
+    {n:"Vegetable Corn Soup", p:"145", t:"v"},
+    {n:"Tomato Soup", p:"145", t:"v"},
+    {n:"Vegetable Manchow Soup", p:"145", t:"v"},
+  ]},
+  { title:"Starters &middot; Chicken", items:[
+    {n:"Chicken Spring Roll", d:"Crispy spring rolls stuffed with chicken & vegetables.", p:"240", t:"n"},
+    {n:"Mixed Spring Rolls", d:"Crispy spring rolls stuffed with chicken & vegetables.", p:"240", t:"n", s:1},
+    {n:"Chicken Shanghai Rolls", d:"Minced chicken & vegetables wrapped in a skin, deep fried & served crispy.", p:"240", t:"n", s:1},
+    {n:"Chicken Kheema Rolls", d:"Minced chicken cooked with diced vegetables, cantonese style.", p:"240", t:"n"},
+  ]},
+  { title:"Starters &middot; Vegetarian", items:[
+    {n:"Vegetable Spring Rolls", p:"240", t:"v"},
+    {n:"Crisp Vegetable", p:"285", t:"v"},
+  ]},
+]},
+
+{ id:"noodles", label:"Noodles & Chopsuey", note:"Soft, crispy and golden-fried, wok-tossed to order.", groups:[
+  { title:"Soft & Crispy Noodles", items:[
+    {n:"Chicken Soft Noodles", d:"Soft noodles sautéed with shredded vegetables & chicken.", p:"280", t:"n"},
+    {n:"Chicken Chilly Garlic Noodles", d:"Soft noodles sautéed with garlic & green chillies.", p:"280", t:"n", s:1},
+    {n:"Chicken Singapore Noodles", d:"Soft noodles topped with a spicy sauce of shredded vegetables & chicken.", p:"280", t:"n", s:1},
+    {n:"Mixed Soft Noodles", d:"Soft noodles sautéed with shredded vegetables, chicken & sea food.", p:"290", t:"n"},
+    {n:"Chicken Schezwan Soft Noodles", p:"280", t:"n"},
+    {n:"Mix Crispy Schezwan Noodles", p:"320", t:"n"},
+    {n:"Chicken Crispy Noodles", d:"Golden fried noodles topped with a mild sauce of diced vegetables & chicken.", p:"280", t:"n", s:1},
+    {n:"Mixed Crispy Noodles", d:"Golden fried noodles topped with a mild sauce of vegetables, chicken & sea food.", p:"320", t:"n"},
+    {n:"Chicken Schezwan Crispy Noodles", d:"Golden fried noodles topped with schezwan sauce.", p:"320", t:"n"},
+  ]},
+  { title:"Chopsuey & Egg Noodles", items:[
+    {n:"Mixed Chinese Chopsuey", d:"Golden fried noodles in a garlic-flavoured mild sauce with vegetables, chicken & sea food.", p:"320", t:"n"},
+    {n:"Chicken Chinese Chopsuey", d:"Golden fried noodles in a garlic-flavoured mild sauce with vegetables & chicken.", p:"320", t:"n"},
+    {n:"Chicken American Chopsuey", d:"Golden fried noodles topped with chicken sweet & sour sauce.", p:"320", t:"n"},
+    {n:"Mixed American Chopsuey", d:"Golden fried noodles topped with chicken, sea food & sweet & sour sauce.", p:"330", t:"n"},
+    {n:"Egg Soft Noodles", p:"250", t:"e"},
+    {n:"Egg Shezwan Soft Noodles", p:"260", t:"e"},
+  ]},
+  { title:"Vegetarian Noodles & Chopsuey", items:[
+    {n:"Vegetable Soft Noodles", p:"275", t:"v"},
+    {n:"Vegetable Chilli Garlic Noodles", p:"250", t:"v"},
+    {n:"Vegetable Singapore Noodles", p:"250", t:"v"},
+    {n:"Vegetable Crispy Noodles", p:"275", t:"v"},
+    {n:"Vegetable Chinese Chopsuey", p:"285", t:"v"},
+    {n:"Vegetable American Chopsuey", p:"285", t:"v"},
+    {n:"Vegetable Shezwan Soft Noodles", p:"265", t:"v"},
+    {n:"Vegetables Hakra Soft Noodles", p:"265", t:"v"},
+  ]},
+]},
+
+{ id:"chicken", label:"Chicken", note:"Kadai Ka Nazrana &mdash; wok-fired Chinese style and slow-simmered Indian style.", groups:[
+  { title:"Chinese Style", items:[
+    {n:"Tawa Chicken", p:"485", t:"n"},
+    {n:"Haramasala Chicken", extra:"Dry", p:"485", t:"n", s:1},
+    {n:"Chilly Loose Chicken", extra:"Dry", p:"445", t:"n", s:1},
+    {n:"Goan Chicken", extra:"Dry", p:"445", t:"n", s:1},
+    {n:"Ginger Chicken", extra:"Dry/Wet", d:"Minced chicken balls cooked in ginger sauce.", p:"445", t:"n"},
+    {n:"Chilli Chicken", extra:"Dry/Wet", d:"Dices of crispy chicken with lemon & hot garlic sauce.", p:"445", t:"n"},
+    {n:"Sweet & Sour Chicken", extra:"Dry/Wet", d:"Chicken winglets deep fried & sautéed with black pepper & soya sauce.", p:"445", t:"n"},
+    {n:"Chicken Hot Garlic", extra:"Dry/Wet", d:"Dices of chicken seasoned with a strong garlic sauce.", p:"445", t:"n"},
+    {n:"Chicken Manchurian", extra:"Dry/Wet", d:"Marinated chicken fried & tossed in chilly garlic sauce & spring onions.", p:"445", t:"n"},
+    {n:"Red Hot Chilly Chicken", extra:"Dry", p:"445", t:"n", s:1},
+    {n:"Pepper Chicken", extra:"Dry", p:"445", t:"n", s:1},
+    {n:"Schezwan Chicken", extra:"Dry/Wet", d:"Dices of chicken cooked & tossed in spices in a kadai.", p:"445", t:"n", s:1},
+    {n:"Yoga Chicken", extra:"Dry", d:"Juliennes of chicken coated with corn flour, cooked in curd-flavoured gravy.", p:"445", t:"n", s:1},
+    {n:"Chilly Chicken Pakoda", extra:"Dry", d:"Minced chicken balls deep fried & served with hot garlic sauce.", p:"445", t:"n", s:1},
+    {n:"Chicken Lollypop", extra:"Dry", d:"Chicken winglets coated with corn flour & spices, deep fried.", p:"445", t:"n"},
+    {n:"Soya Chicken", extra:"Dry", p:"445", t:"n", s:1},
+    {n:"Chicken Majestic", extra:"Dry", p:"445", t:"n", s:1},
+    {n:"Stick Chicken", p:"445", t:"n"},
+    {n:"Thread Chicken", extra:"Dry", p:"475", t:"n", s:1},
+    {n:"Chicken 99", p:"445", t:"n"},
+    {n:"Butter Garlic Chicken", extra:"Dry", p:"445", t:"n"},
+  ]},
+  { title:"Indian Style", items:[
+    {n:"Murgh Kandhari", d:"Chicken cooked with dried pomegranate, herbs & spices.", p:"475", t:"n", s:1},
+    {n:"Butter Chicken", d:"Boneless chicken cooked in a creamy tomato gravy & butter.", p:"475", t:"n", s:1},
+    {n:"Kadai Chicken", d:"Cubes of chicken garnished with fresh herbs & spices, cooked in a kadai.", p:"475", t:"n"},
+    {n:"Punjabi Chicken", p:"475", t:"n", s:1},
+    {n:"Chicken Chatpat", p:"475", t:"n", s:1},
+    {n:"Hyderabadi Chicken", p:"475", t:"n", s:1},
+    {n:"Dum Ka Chicken", p:"475", t:"n", s:1},
+    {n:"Chicken 65", extra:"Dry", p:"475", t:"n", s:1},
+    {n:"Chicken Tikka Masala", p:"475", t:"n"},
+    {n:"Chicken Kali Mirchi", extra:"Dry", p:"475", t:"n"},
+    {n:"Achari Chicken", p:"475", t:"n", s:1},
+    {n:"Methi Chicken", d:"Chicken cooked with fresh methi & aromatic herbs.", p:"475", t:"n"},
+    {n:"Chicken Kheema Fry", d:"Minced chicken cooked with Indian exotic herbs & spices.", p:"475", t:"n"},
+  ]},
+]},
+
+{ id:"mutton", label:"Mutton", note:"Slow-cooked curries and grill-house classics.", groups:[
+  { title:"Curries", items:[
+    {n:"Mutton Chatpat", p:"545", t:"n"},
+    {n:"Achari Mutton", p:"545", t:"n"},
+    {n:"Rogan Ghosht", d:"Tender lamb cooked with exotic herbs, saffron & yogurt.", p:"545", t:"n"},
+    {n:"Dum Ka Mutton", p:"545", t:"n"},
+    {n:"Methi Mutton", d:"Boneless mutton cooked with fresh methi & aromatic herbs.", p:"545", t:"n"},
+    {n:"Mutton Kandhari", d:"Boneless mutton cooked with dried pomegranate & herbs.", p:"545", t:"n", s:1},
+    {n:"Mutton Masala", d:"Boneless mutton cooked in a spicy gravy.", p:"545", t:"n"},
+    {n:"Mutton Kali Mirchi", extra:"Dry", d:"Lamb simmered in Indian spices & herbs, sautéed with black pepper & soya sauce.", p:"600", t:"n"},
+    {n:"Pepper Mutton", extra:"Dry", p:"600", t:"n", s:1},
+    {n:"Mutton Fry", p:"600", t:"n", s:1},
+    {n:"Talahua Ghosht", p:"600", t:"n"},
+  ]},
+  { title:"From the Kebab Grill", items:[
+    {n:"Boti Kebab", p:"595", t:"n"},
+    {n:"Sheekh Kebab", p:"595", t:"n"},
+    {n:"Pathar Ka Ghosht", p:"595", t:"n"},
+  ]},
+]},
+
+{ id:"seafood", label:"Seafood", note:"Dariya Ke Daaman Se &mdash; fresh Marrel fish and prawns.", groups:[
+  { title:"Fish &middot; Marrel", items:[
+    {n:"Patrani Fish", extra:"Dry", p:"575", t:"n"},
+    {n:"Fish 99", p:"575", t:"n"},
+    {n:"Malai Fish", extra:"Dry", p:"575", t:"n"},
+    {n:"Fish Tikka", extra:"Dry", p:"575", t:"n"},
+    {n:"Kandhari Fish", extra:"Dry", p:"545", t:"n"},
+    {n:"Apollo Fish", extra:"Dry", p:"545", t:"n", s:1},
+    {n:"Goan Fish", extra:"Dry", p:"545", t:"n", s:1},
+    {n:"Red Hot Chilly Fish", extra:"Dry", p:"545", t:"n", s:1},
+    {n:"Chilly Loose Fish", extra:"Dry", p:"545", t:"n", s:1},
+    {n:"Fish Hara Masala", extra:"Dry", p:"545", t:"n", s:1},
+    {n:"Yoga Fish", extra:"Dry", p:"545", t:"n", s:1},
+    {n:"Soya Fish", extra:"Dry", p:"545", t:"n", s:1},
+    {n:"Corn Fish", extra:"Dry", p:"545", t:"n", s:1},
+    {n:"Pepper Fish", extra:"Dry", d:"Dices of fish deep fried & sautéed with black pepper & soya sauce.", p:"545", t:"n", s:1},
+    {n:"Fried Fish", extra:"Dry", d:"Boneless slices of fish marinated in a bread mixture & deep fried.", p:"545", t:"n"},
+    {n:"Phuket Fish", p:"545", t:"n"},
+    {n:"Fish Machurian", extra:"Dry/Wet", p:"545", t:"n"},
+    {n:"Chilly Fish", extra:"Dry/Wet", p:"545", t:"n"},
+    {n:"Sweet & Sour Fish", extra:"Dry/Wet", p:"545", t:"n"},
+    {n:"Ginger Fish", extra:"Dry/Wet", d:"Tender fish cooked in our traditional ginger sauce.", p:"545", t:"n"},
+    {n:"Schezwan Fish", extra:"Dry/Wet", d:"Tender fish cooked with chilly, garlic & spring onions in schezwan sauce.", p:"545", t:"n"},
+    {n:"Fish Masala Fry", extra:"Curry", p:"545", t:"n"},
+  ]},
+  { title:"Prawns", items:[
+    {n:"Chilly Loose Prawns", extra:"Dry", p:"545", t:"n", s:1},
+    {n:"Red Hot Chilly Prawns", extra:"Dry", p:"545", t:"n", s:1},
+    {n:"Hara Masala Prawns", extra:"Dry", p:"545", t:"n", s:1},
+    {n:"Goan Prawns", extra:"Dry", p:"545", t:"n", s:1},
+    {n:"Pepper Prawns", extra:"Dry", p:"545", t:"n", s:1},
+    {n:"Golden Fried Prawns", p:"545", t:"n", s:1},
+    {n:"Butter Garlic Prawns", p:"545", t:"n"},
+    {n:"Prawns Masala Fry", extra:"Curry", p:"545", t:"n"},
+    {n:"Malai Prawns", extra:"Dry", p:"575", t:"n"},
+    {n:"Prawns Tikka", p:"575", t:"n"},
+    {n:"Prawn Pakoda", d:"Minced prawn balls deep fried & served with hot garlic sauce.", p:"545", t:"n"},
+    {n:"Ginger Prawns", extra:"Dry/Wet", d:"Fresh prawns boiled & sautéed with exotic herbs & spices.", p:"545", t:"n", s:1},
+    {n:"Schezwan Prawns", extra:"Dry/Wet", d:"Fresh prawns cooked with chilly, garlic & spring onion in schezwan sauce.", p:"545", t:"n"},
+  ]},
+]},
+
+{ id:"tandoor", label:"Tandoor & Kebabs", note:"Angaar Ke Tohfe &mdash; straight from the charcoal tandoor.", groups:[
+  { title:"Chicken Tandoori & Kebabs", items:[
+    {n:"Tandoori Chicken", d:"Chicken marinated in exotic Indian spices, served with mint chutney.", p:"580", p2:"300", t:"n"},
+    {n:"Tangdi Kebab", extra:"Dry", d:"Chicken legs marinated in exotic Indian spices, served with mint chutney.", p:"580", p2:"300", t:"n", s:1},
+    {n:"Chicken Tikka", d:"Chicken marinated with Indian spices, served with mint chutney.", p:"475", t:"n"},
+    {n:"Haryali Kebab", d:"Chicken marinated with Indian spices & spinach, served with mint chutney.", p:"475", t:"n"},
+    {n:"Garlic Kebab", d:"Chicken marinated with Indian spices & garlic, served with mint chutney.", p:"475", t:"n"},
+    {n:"Reshmi Kebab", d:"Mildly spiced chicken marinated in a cheesy cream.", p:"475", t:"n"},
+    {n:"Murgh Malai Kebab", d:"Chicken marinated in cheesy cream.", p:"475", t:"n"},
+    {n:"Kandhari Kebab", d:"Chicken marinated with Indian spices, herbs & chopped green chillies, served with mint chutney.", p:"475", t:"n"},
+  ]},
+  { title:"Sharing Platters", items:[
+    {n:"Tandoori Platter", d:"Assorted kebabs of mutton & chicken, served with mint chutney.", p:"3000", t:"n"},
+    {n:"Seafood Platter", d:"Any two fish & two prawns of your choice.", p:"3000", t:"n"},
+  ]},
+]},
+
+{ id:"veg", label:"Vegetarian Mains", note:"Mushroom, paneer, baby corn and garden classics.", groups:[
+  { title:"Mushroom", items:[
+    {n:"Pepper Mushroom", p:"290", t:"v"},
+    {n:"Mushroom 99", p:"290", t:"v"},
+    {n:"Haramasala Mushroom", p:"290", t:"v"},
+    {n:"Goan Mushroom", p:"290", t:"v"},
+    {n:"Red Hot Chilly Mushroom", p:"290", t:"v"},
+    {n:"Ginger Mushroom", p:"290", t:"v"},
+    {n:"Schezwan Mushroom", p:"290", t:"v"},
+    {n:"Mushroom Machuria", p:"290", t:"v"},
+  ]},
+  { title:"Paneer Ka Khazana", items:[
+    {n:"Paneer Butter Masala", p:"425", t:"v"},
+    {n:"Palak Paneer", p:"425", t:"v"},
+    {n:"Shahi Paneer", p:"425", t:"v"},
+    {n:"Kadai Paneer", p:"425", t:"v"},
+    {n:"Paneer 65", p:"425", t:"v"},
+    {n:"Paneer Chatpat", p:"425", t:"v"},
+    {n:"Chilly Paneer", extra:"Dry/Wet", p:"425", t:"v"},
+    {n:"Pepper Paneer", p:"425", t:"v"},
+    {n:"Paneer 99", p:"425", t:"v"},
+    {n:"Haramasala Paneer", p:"425", t:"v"},
+    {n:"Goan Paneer", p:"425", t:"v"},
+    {n:"Red Hot Chilly Paneer", p:"425", t:"v"},
+    {n:"Ginger Paneer", extra:"Dry/Wet", p:"425", t:"v"},
+    {n:"Schezwan Paneer", extra:"Dry/Wet", p:"425", t:"v"},
+    {n:"Paneer Machuria", extra:"Dry/Wet", p:"425", t:"v"},
+    {n:"Methi Paneer", p:"425", t:"v"},
+    {n:"Paneer Kandhari", p:"425", t:"v"},
+    {n:"Paneer Tikka", p:"Market Price", t:"v"},
+    {n:"Malai Paneer", p:"Market Price", t:"v"},
+  ]},
+  { title:"Baby Corn", items:[
+    {n:"Paneer Baby Corn", p:"290", t:"v"},
+    {n:"Baby Corn 99", p:"280", t:"v"},
+    {n:"Haramasala Baby Corn", p:"280", t:"v"},
+    {n:"Goan Baby Corn", p:"280", t:"v"},
+    {n:"Red Hot Chilly Baby Corn", p:"280", t:"v"},
+    {n:"Ginger Baby Corn", p:"280", t:"v"},
+    {n:"Schezwan Baby Corn", p:"280", t:"v"},
+    {n:"Baby Corn Machuria", p:"280", t:"v"},
+  ]},
+  { title:"Chinese Vegetable Delicacies", items:[
+    {n:"Vegetable Chow-Chow", p:"290", t:"v"},
+    {n:"Vegetable Machuria", extra:"Dry/Wet", p:"345", t:"v"},
+    {n:"Ginger Vegetable", extra:"Dry/Wet", p:"345", t:"v"},
+  ]},
+  { title:"Indian Vegetable Delicacies", items:[
+    {n:"Dal Makhani", p:"300", t:"v"},
+    {n:"Dal Fry", p:"250", t:"v"},
+    {n:"Vegetable Kandhari", p:"345", t:"v"},
+    {n:"Vegetable Kofta Curry", p:"345", t:"v"},
+    {n:"Malai Kofta", p:"345", t:"v"},
+    {n:"Vegetable 65", p:"345", t:"v"},
+    {n:"Aloo Mutter", p:"345", t:"v"},
+    {n:"Vegetable Chatpat", p:"345", t:"v"},
+    {n:"Kadai Vegetable", p:"345", t:"v"},
+    {n:"Mix Vegetable Curry", p:"345", t:"v"},
+    {n:"Methi Vegetable", p:"345", t:"v"},
+    {n:"Achari Vegetable", p:"345", t:"v"},
+  ]},
+]},
+
+{ id:"rice", label:"Rice & Biryani", note:"Basmati Khazana &mdash; slow-dum biryani and wok-fried rice.", groups:[
+  { title:"Biryani", items:[
+    {n:"Chicken Zafrani Biryani", d:"Basmati rice simmered with chicken in exotic spices, pure ghee & saffron.", p:"350", t:"n"},
+    {n:"Mutton Zafrani Biryani", extra:"Boneless", d:"Basmati rice simmered with lamb in exotic spices, pure ghee & saffron.", p:"395", t:"n"},
+  ]},
+  { title:"Fried Rice", items:[
+    {n:"Mixed Fried Rice", d:"Basmati rice simmered with prawns, fish, chicken & vegetables.", p:"275", t:"n"},
+    {n:"Chicken Fried Rice", p:"265", t:"n"},
+    {n:"Chicken Schezwan Fried Rice", p:"265", t:"n"},
+    {n:"Mixed Schezwan Fried Rice", p:"265", t:"n"},
+    {n:"Mak's Special Rice", extra:"Chicken/Veg/Mix", d:"Half rice mixed with ginger gravy, half fried rice.", p:"265", t:"b"},
+    {n:"Fish Fried Rice", p:"285", t:"n"},
+    {n:"Prawns Fried Rice", p:"285", t:"n"},
+    {n:"Egg Fried Rice", p:"265", t:"e"},
+    {n:"Vegetable Fried Rice", p:"240", t:"v"},
+  ]},
+  { title:"Steamed & Flavoured Rice", items:[
+    {n:"Zeera Rice", p:"260", t:"v"},
+    {n:"Plain Rice", p:"180", t:"v"},
+    {n:"Kaju Rice", p:"250", t:"v"},
+    {n:"Ghee Rice", p:"250", t:"v"},
+  ]},
+]},
+
+{ id:"breads", label:"Breads & Salads", note:"Roti Ki Farmaish, plus salads and raita on the side.", groups:[
+  { title:"Roti Ki Farmaish", items:[
+    {n:"Tandoori Roti", p:"35", t:"v"},
+    {n:"Rumali Roti", p:"35", t:"v"},
+    {n:"Plain Naan", p:"40", t:"v"},
+    {n:"Tandoori Butter Roti", p:"40", t:"v"},
+    {n:"Laccha Parotha", p:"50", t:"v"},
+    {n:"Pudina Parotha", p:"50", t:"v"},
+    {n:"Butter Naan", p:"50", t:"v"},
+    {n:"Garlic Naan", p:"50", t:"v"},
+    {n:"Roghni Naan", p:"80", t:"v"},
+  ]},
+  { title:"Salads & Raita", items:[
+    {n:"Onion Salad", p:"60", t:"v"},
+    {n:"Green Salad", p:"70", t:"v"},
+    {n:"Cucumber Salad", p:"70", t:"v"},
+    {n:"Curd", p:"70", t:"v"},
+    {n:"Mix Raita", p:"80", t:"v"},
+    {n:"Maxican Green Salad", p:"100", t:"v"},
+    {n:"Russian Salad", p:"200", t:"v"},
+  ]},
+]},
+
+{ id:"sweets", label:"Sweets & Drinks", note:"To finish &mdash; and to sip along the way.", groups:[
+  { title:"Desserts", items:[
+    {n:"Double Ka Meetha", p:"160", t:"v"},
+    {n:"Qurbani Ka Meetha", p:"160", t:"v"},
+    {n:"Cream Fruit", p:"180", t:"v"},
+    {n:"Kashmiri Rabdi", p:"180", t:"v"},
+    {n:"Trifle Pudding", p:"180", t:"v"},
+    {n:"Apricot Delight", p:"180", t:"v"},
+    {n:"Turkish Milk Cake", p:"195", t:"v"},
+    {n:"Badam Ka Halwa", p:"225", t:"v"},
+  ]},
+  { title:"Beverages", items:[
+    {n:"Cold Drinks", p:"As Per MRP", t:null},
+    {n:"Mineral Water", p:"As Per MRP", t:null},
+  ]},
+]},
+];
+
+const PICKS = [
+  {cat:"chicken", name:"Hyderabadi Chicken", desc:"A Kadai Ka Nazrana signature, slow-cooked with local spice.", price:"₹475"},
+  {cat:"tandoor", name:"Tandoori Chicken", desc:"Charcoal-fired, served with mint chutney.", price:"₹580 / ₹300"},
+  {cat:"mutton", name:"Mutton Kandhari", desc:"Boneless mutton with dried pomegranate & herbs.", price:"₹545"},
+  {cat:"rice", name:"Chicken Zafrani Biryani", desc:"Basmati, pure ghee & saffron, slow-dum cooked.", price:"₹350"},
+  {cat:"veg", name:"Paneer Tikka", desc:"From the Paneer Ka Khazana, tandoor-charred.", price:"Market Price"},
+  {cat:"sweets", name:"Badam Ka Halwa", desc:"Rich almond halwa to close the meal.", price:"₹225"},
+];
+
+/* ---------- render ---------- */
+const pillNav = document.getElementById("pillNav");
+const menuRoot = document.getElementById("menuRoot");
+const pickGrid = document.getElementById("pickGrid");
+
+MENU.forEach(cat=>{
+  const a = document.createElement("a");
+  a.href = "#"+cat.id;
+  a.textContent = cat.label;
+  pillNav.appendChild(a);
+
+  const section = document.createElement("section");
+  section.className = "category";
+  section.id = cat.id;
+
+  const banner = document.createElement("div");
+  banner.className = "cat-banner pattern";
+  banner.innerHTML = `<h2>${cat.label}</h2><div class="ornament">&#9670;</div>${cat.note ? `<p class="cat-note">${cat.note}</p>` : ""}`;
+  section.appendChild(banner);
+
+  const body = document.createElement("div");
+  body.className = "cat-body reveal";
+
+  cat.groups.forEach(group=>{
+    const g = document.createElement("div");
+    g.className = "group";
+    g.innerHTML = `<div class="group-title"><span>${group.title}</span></div>`;
+    const ul = document.createElement("ul");
+    ul.className = "dish-list";
+
+    group.items.forEach(item=>{
+      const li = document.createElement("li");
+      li.className = "dish";
+      li.dataset.name = item.n.toLowerCase();
+
+      const dotClass = item.t ? item.t : "";
+      const dot = item.t ? `<span class="dot ${dotClass}" title="${ {v:"Vegetarian",n:"Non-Vegetarian",e:"Egg",b:"Choice of veg / non-veg"}[item.t] }"></span>` : `<span></span>`;
+
+      const priceHtml = item.p2
+        ? `₹${item.p}<small>full</small>/&nbsp;₹${item.p2}<small>half</small>`
+        : (/^\d+$/.test(item.p) ? `₹${item.p}` : item.p);
+
+      li.innerHTML = `
+        ${dot}
+        <div class="dish-body">
+          <div class="dish-name">${item.n}${item.extra ? ` <span style="color:var(--ink-500);font-family:'Jost',sans-serif;font-weight:400;font-size:.72rem;letter-spacing:.04em;">(${item.extra})</span>` : ""}${item.s ? ` <span class="star">&#10022;</span>` : ""}</div>
+          ${item.d ? `<p class="dish-desc">${item.d}</p>` : ""}
+        </div>
+        <div class="dish-price">${priceHtml}</div>
+      `;
+      ul.appendChild(li);
+    });
+
+    g.appendChild(ul);
+    body.appendChild(g);
+  });
+
+  section.appendChild(body);
+  menuRoot.appendChild(section);
+});
+
+PICKS.forEach(p=>{
+  const card = document.createElement("a");
+  card.href = "#"+p.cat;
+  card.className = "pick-card";
+  card.style.textDecoration = "none";
+  card.innerHTML = `
+    <div class="pk-top"><span class="pk-name">${p.name}</span><span class="pk-price">${p.price}</span></div>
+    <p class="pk-desc">${p.desc}</p>
+  `;
+  pickGrid.appendChild(card);
+});
+
+/* ---------- active pill on scroll ---------- */
+const pillLinks = Array.from(pillNav.querySelectorAll("a"));
+const sections = MENU.map(c=>document.getElementById(c.id));
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const id = entry.target.id;
+      pillLinks.forEach(a=>a.classList.toggle("active", a.getAttribute("href") === "#"+id));
+    }
+  });
+},{ rootMargin:"-45% 0px -50% 0px", threshold:0 });
+sections.forEach(s=>io.observe(s));
+
+/* ---------- reveal on scroll ---------- */
+const revealEls = document.querySelectorAll(".reveal");
+const rio = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){ entry.target.classList.add("in"); rio.unobserve(entry.target); }
+  });
+},{ threshold:.08 });
+revealEls.forEach(el=>rio.observe(el));
+
+/* ---------- search ---------- */
+const searchInput = document.getElementById("dishSearch");
+const allDishes = Array.from(document.querySelectorAll("li.dish"));
+const allGroups = Array.from(document.querySelectorAll(".group"));
+const allCats = Array.from(document.querySelectorAll("section.category"));
+const globalNoHits = document.getElementById("globalNoHits");
+
+searchInput.addEventListener("input", ()=>{
+  const q = searchInput.value.trim().toLowerCase();
+  let anyVisible = false;
+
+  allDishes.forEach(li=>{
+    const match = !q || li.dataset.name.includes(q);
+    li.style.display = match ? "" : "none";
+    if(match) anyVisible = true;
+  });
+
+  allGroups.forEach(g=>{
+    const hasVisible = Array.from(g.querySelectorAll("li.dish")).some(li=>li.style.display !== "none");
+    g.classList.toggle("filtered-empty", q !== "" && !hasVisible);
+  });
+
+  allCats.forEach(c=>{
+    const hasVisible = Array.from(c.querySelectorAll("li.dish")).some(li=>li.style.display !== "none");
+    c.classList.toggle("filtered-empty", q !== "" && !hasVisible);
+  });
+
+  globalNoHits.style.display = (q !== "" && !anyVisible) ? "block" : "none";
+});
+</script>
