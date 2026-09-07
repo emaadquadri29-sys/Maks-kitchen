@@ -114,7 +114,15 @@
   }
   .search-wrap input:focus{ width:200px; outline:2px solid var(--gold-400); outline-offset:1px; }
   .search-wrap input::placeholder{ color:var(--ink-500); }
-  .search-wrap svg{ position:absolute; left:.7rem; top:50%; transform:translateY(-50%); width:14px; height:14px; opacity:.6; pointer-events:none; }
+  .search-wrap svg.icon-search{ position:absolute; left:.7rem; top:50%; transform:translateY(-50%); width:14px; height:14px; opacity:.6; pointer-events:none; }
+  .search-clear{
+    position:absolute; right:.55rem; top:50%; transform:translateY(-50%); width:18px; height:18px;
+    display:none; align-items:center; justify-content:center; border:none; background:none; color:var(--ink-500);
+    cursor:pointer; padding:0; border-radius:50%;
+  }
+  .search-clear:hover{ color:var(--gold-300); }
+  .search-clear.show{ display:flex; }
+  .search-clear svg{ width:12px; height:12px; }
 
   /* ---------- hero ---------- */
   .hero{
@@ -147,24 +155,15 @@
   .btn-outline{ border:1px solid rgba(250,246,236,.35); color:var(--cream-50); }
   .btn-outline:hover{ border-color:var(--gold-400); color:var(--gold-300); }
 
-  /* ---------- chef's picks ---------- */
-  .picks{ background:var(--navy-900); padding:2.6rem 1.25rem 3rem; border-bottom:1px solid var(--navy-line); }
-  .picks-head{ text-align:center; color:var(--cream-50); }
-  .picks-head span.eyebrow{ font-size:.72rem; letter-spacing:.3em; text-transform:uppercase; color:var(--gold-400); }
-  .picks-head h2{ font-size:clamp(1.7rem,4vw,2.3rem); color:var(--cream-50); font-weight:500; margin-top:.3rem; }
-  .pick-grid{
-    max-width:1080px; margin:1.8rem auto 0; display:grid; gap:1rem;
-    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  /* ---------- about ---------- */
+  .about{ background:var(--navy-900); padding:3rem 1.25rem 3.2rem; border-bottom:1px solid var(--navy-line); text-align:center; }
+  .about .eyebrow{ font-size:.72rem; letter-spacing:.3em; text-transform:uppercase; color:var(--gold-400); }
+  .about h2{ font-size:clamp(1.7rem,4vw,2.3rem); color:var(--cream-50); font-weight:500; margin-top:.4rem; }
+  .about p.copy{
+    max-width:64ch; margin:1.2rem auto 0; color:var(--cream-200); font-size:1rem; line-height:1.8;
   }
-  .pick-card{
-    background:var(--navy-800); border:1px solid var(--navy-line); border-radius:3px; padding:1.1rem 1.2rem;
-    display:flex; flex-direction:column; gap:.4rem;
-  }
-  .pick-card .pk-top{ display:flex; justify-content:space-between; align-items:baseline; gap:.6rem; }
-  .pick-card .pk-name{ color:var(--cream-50); font-family:'Cormorant Garamond',serif; font-size:1.28rem; font-weight:600; }
-  .pick-card .pk-price{ color:var(--gold-300); font-variant-numeric:tabular-nums; font-size:.92rem; flex-shrink:0; }
-  .pick-card .pk-desc{ color:var(--cream-200); font-size:.85rem; line-height:1.55; margin:0; }
-  .pick-card .pk-tag{ font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:var(--gold-400); }
+  .about p.copy strong{ color:var(--gold-300); font-weight:600; }
+  .about .chips{ margin-top:1.6rem; }
 
   /* ---------- banquet / catering ---------- */
   .events{
@@ -276,6 +275,11 @@
   .reveal.in{ opacity:1; transform:translateY(0); }
   @media (prefers-reduced-motion:reduce){ .reveal{ opacity:1; transform:none; transition:none; } }
 
+  #spiceCanvas{
+    position:fixed; inset:0; width:100vw; height:100vh; z-index:5; pointer-events:none;
+  }
+  @media (prefers-reduced-motion:reduce){ #spiceCanvas{ display:none; } }
+
   @media (max-width:640px){
     .header-inner{ flex-wrap:wrap; }
     .search-wrap input,.search-wrap input:focus{ width:120px; }
@@ -298,8 +302,11 @@
       <div class="menu-panel" id="menuPanel" role="menu" hidden></div>
     </div>
     <div class="search-wrap">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-      <input id="dishSearch" type="search" placeholder="Search a dish…" aria-label="Search the menu">
+      <svg class="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input id="dishSearch" type="text" autocomplete="off" spellcheck="false" placeholder="Search a dish…" aria-label="Search the menu">
+      <button class="search-clear" id="searchClear" type="button" aria-label="Clear search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
     </div>
   </div>
 </header>
@@ -321,12 +328,15 @@
   </div>
 </section>
 
-<section class="picks">
-  <div class="picks-head">
-    <span class="eyebrow">From the Kitchen</span>
-    <h2>A Few House Favourites</h2>
+<section class="about" id="about">
+  <span class="eyebrow">Our Story</span>
+  <h2>A Hyderabad Favourite Since 2018</h2>
+  <p class="copy"><strong>Mak's Kitchen</strong> has established itself as a premier dining and gathering destination in Hyderabad, delivering exceptional multi-cuisine flavours <strong>since 2018</strong>. Widely celebrated for serving thousands of satisfied guests and managing flawless family gatherings, we pride ourselves on exceptional taste and top-tier service. From our signature crispy Thread Chicken to our authentic, richly spiced Mughlai biryanis, we combine generous portions with a premium, well-sanitised dining experience. Choose Mak's Kitchen to elevate your next gathering with unforgettable flavour, outstanding quality, and pocket-friendly value.</p>
+  <div class="chips">
+    <span class="chip">Est. 2018</span>
+    <span class="chip">Multi-Cuisine</span>
+    <span class="chip">Family Gatherings</span>
   </div>
-  <div class="pick-grid" id="pickGrid"></div>
 </section>
 
 <section class="events" id="events">
@@ -702,19 +712,9 @@ const MENU = [
 ]},
 ];
 
-const PICKS = [
-  {cat:"chicken", name:"Hyderabadi Chicken", desc:"A Kadai Ka Nazrana signature, slow-cooked with local spice.", price:"₹475"},
-  {cat:"tandoor", name:"Tandoori Chicken", desc:"Charcoal-fired, served with mint chutney.", price:"₹580 / ₹300"},
-  {cat:"mutton", name:"Mutton Kandhari", desc:"Boneless mutton with dried pomegranate & herbs.", price:"₹545"},
-  {cat:"rice", name:"Chicken Zafrani Biryani", desc:"Basmati, pure ghee & saffron, slow-dum cooked.", price:"₹350"},
-  {cat:"veg", name:"Paneer Tikka", desc:"From the Paneer Ka Khazana, tandoor-charred.", price:"Market Price"},
-  {cat:"sweets", name:"Badam Ka Halwa", desc:"Rich almond halwa to close the meal.", price:"₹225"},
-];
-
 /* ---------- render ---------- */
 const menuPanel = document.getElementById("menuPanel");
 const menuRoot = document.getElementById("menuRoot");
-const pickGrid = document.getElementById("pickGrid");
 
 MENU.forEach(cat=>{
   const a = document.createElement("a");
@@ -809,18 +809,6 @@ menuPanel.addEventListener("click", (e)=>{
   if(e.target.tagName === "A") closeMenu();
 });
 
-PICKS.forEach(p=>{
-  const card = document.createElement("a");
-  card.href = "#"+p.cat;
-  card.className = "pick-card";
-  card.style.textDecoration = "none";
-  card.innerHTML = `
-    <div class="pk-top"><span class="pk-name">${p.name}</span><span class="pk-price">${p.price}</span></div>
-    <p class="pk-desc">${p.desc}</p>
-  `;
-  pickGrid.appendChild(card);
-});
-
 /* ---------- active link on scroll ---------- */
 const pillLinks = Array.from(menuPanel.querySelectorAll("a[href^='#']")).filter(a=>a.getAttribute("href") !== "#events");
 const sections = MENU.map(c=>document.getElementById(c.id));
@@ -844,32 +832,45 @@ const rio = new IntersectionObserver((entries)=>{
 revealEls.forEach(el=>rio.observe(el));
 
 /* ---------- search ---------- */
-const searchInput = document.getElementById("dishSearch");
-const allDishes = Array.from(document.querySelectorAll("li.dish"));
-const allGroups = Array.from(document.querySelectorAll(".group"));
-const allCats = Array.from(document.querySelectorAll("section.category"));
-const globalNoHits = document.getElementById("globalNoHits");
+const searchBox = document.getElementById("dishSearch");
+const searchClear = document.getElementById("searchClear");
+const allDishEls = Array.from(document.querySelectorAll("li.dish"));
+const allGroupEls = Array.from(document.querySelectorAll(".group"));
+const allCatEls = Array.from(document.querySelectorAll("section.category"));
+const noHitsEl = document.getElementById("globalNoHits");
 
-searchInput.addEventListener("input", ()=>{
-  const q = searchInput.value.trim().toLowerCase();
+function runSearch(){
+  const q = (searchBox.value || "").trim().toLowerCase();
   let anyVisible = false;
 
-  allDishes.forEach(li=>{
-    const match = !q || li.dataset.name.includes(q);
+  allDishEls.forEach(li=>{
+    const name = li.dataset.name || "";
+    const match = q === "" || name.indexOf(q) !== -1;
     li.style.display = match ? "" : "none";
     if(match) anyVisible = true;
   });
 
-  allGroups.forEach(g=>{
+  allGroupEls.forEach(g=>{
     const hasVisible = Array.from(g.querySelectorAll("li.dish")).some(li=>li.style.display !== "none");
     g.classList.toggle("filtered-empty", q !== "" && !hasVisible);
   });
 
-  allCats.forEach(c=>{
+  allCatEls.forEach(c=>{
     const hasVisible = Array.from(c.querySelectorAll("li.dish")).some(li=>li.style.display !== "none");
     c.classList.toggle("filtered-empty", q !== "" && !hasVisible);
   });
 
-  globalNoHits.style.display = (q !== "" && !anyVisible) ? "block" : "none";
+  noHitsEl.style.display = (q !== "" && !anyVisible) ? "block" : "none";
+  searchClear.classList.toggle("show", q !== "");
+}
+
+["input","keyup","change","paste"].forEach(evt=>{
+  searchBox.addEventListener(evt, runSearch);
 });
+searchClear.addEventListener("click", ()=>{
+  searchBox.value = "";
+  runSearch();
+  searchBox.focus();
+});
+runSearch();
 </script>
