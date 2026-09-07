@@ -841,13 +841,53 @@ const allGroupEls = Array.from(document.querySelectorAll(".group"));
 const allCatEls = Array.from(document.querySelectorAll("section.category"));
 const noHitsEl = document.getElementById("globalNoHits");
 
+function levenshtein(a, b){
+  if(a === b) return 0;
+  if(a.length === 0) return b.length;
+  if(b.length === 0) return a.length;
+  let prev = new Array(b.length + 1);
+  let curr = new Array(b.length + 1);
+  for(let j = 0; j <= b.length; j++) prev[j] = j;
+  for(let i = 1; i <= a.length; i++){
+    curr[0] = i;
+    for(let j = 1; j <= b.length; j++){
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      curr[j] = Math.min(prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost);
+    }
+    [prev, curr] = [curr, prev];
+  }
+  return prev[b.length];
+}
+
+function fuzzyTolerance(len){
+  if(len <= 3) return 0;
+  if(len <= 5) return 1;
+  if(len <= 8) return 2;
+  return 3;
+}
+
+function dishMatches(name, query){
+  if(query === "") return true;
+  if(name.indexOf(query) !== -1) return true;
+  const nameWords = name.split(/\s+/);
+  const queryWords = query.split(/\s+/).filter(Boolean);
+  return queryWords.every(qw=>{
+    if(name.indexOf(qw) !== -1) return true;
+    const tol = fuzzyTolerance(qw.length);
+    return nameWords.some(nw=>{
+      if(Math.abs(nw.length - qw.length) > tol + 2) return false;
+      return levenshtein(qw, nw) <= tol;
+    });
+  });
+}
+
 function runSearch(){
   const q = (searchBox.value || "").trim().toLowerCase();
   let anyVisible = false;
 
   allDishEls.forEach(li=>{
     const name = li.dataset.name || "";
-    const match = q === "" || name.indexOf(q) !== -1;
+    const match = q === "" || dishMatches(name, q);
     li.style.display = match ? "" : "none";
     if(match) anyVisible = true;
   });
@@ -884,9 +924,9 @@ runSearch();
 
   const sctx = spiceCanvas.getContext("2d");
   const SPICE_COLORS = {
-    seed: ["#4a3220","#5b3a22","#3a2717"],
-    chili: "rgba(138,50,38,0.85)",
-    thread: "rgba(201,162,39,0.85)",
+    seed: ["#6b4321","#83512a","#4f3016"],
+    chili: "rgba(166,58,42,0.95)",
+    thread: "rgba(224,180,58,0.95)",
   };
   let sW, sH, dpr = Math.min(window.devicePixelRatio || 1, 2);
   let specks = [];
@@ -899,10 +939,10 @@ runSearch();
     return {
       x: srand(0, sW),
       y: srand(0, sH),
-      size: type === "thread" ? srand(6, 11) : srand(2, 4),
+      size: type === "thread" ? srand(10, 18) : srand(4, 7),
       rot: srand(0, Math.PI * 2),
       vy: 0, vx: 0,
-      alpha: srand(0.10, 0.22),
+      alpha: srand(0.32, 0.58),
       type,
       color: type === "seed" ? SPICE_COLORS.seed[(Math.random()*3)|0] : SPICE_COLORS[type],
     };
@@ -913,7 +953,7 @@ runSearch();
     spiceCanvas.width = sW * dpr; spiceCanvas.height = sH * dpr;
     spiceCanvas.style.width = sW + "px"; spiceCanvas.style.height = sH + "px";
     sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const target = Math.max(18, Math.round((sW * sH) / 32000));
+    const target = Math.max(30, Math.round((sW * sH) / 16000));
     if(specks.length < target){
       while(specks.length < target) specks.push(makeSpeck());
     } else {
@@ -930,7 +970,8 @@ runSearch();
       sctx.rotate(p.rot);
       if(p.type === "thread"){
         sctx.strokeStyle = p.color;
-        sctx.lineWidth = 1;
+        sctx.lineWidth = 1.8;
+        sctx.lineCap = "round";
         sctx.beginPath();
         sctx.moveTo(-p.size / 2, 0);
         sctx.quadraticCurveTo(0, srand(-1.5, 1.5), p.size / 2, 0);
