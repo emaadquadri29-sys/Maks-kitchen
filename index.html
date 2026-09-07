@@ -76,18 +76,35 @@
     .brand-sub{ display:inline; font-size:.62rem; letter-spacing:.2em; color:var(--cream-200); text-transform:uppercase; }
   }
 
-  nav.pills{
-    display:flex; gap:.4rem; overflow-x:auto; flex:1; scrollbar-width:none; padding:.15rem 0;
+  .menu-drop{ position:relative; flex:1; min-width:0; }
+  .menu-trigger{
+    display:flex; align-items:center; gap:.5rem; background:var(--navy-800); border:1px solid var(--navy-line);
+    color:var(--cream-50); font-family:'Jost',sans-serif; font-size:.82rem; letter-spacing:.06em;
+    text-transform:uppercase; padding:.55rem 1rem; border-radius:4px; cursor:pointer; width:auto;
+    transition:border-color .15s,color .15s;
   }
-  nav.pills::-webkit-scrollbar{ display:none; }
-  nav.pills a{
-    white-space:nowrap; text-decoration:none; color:var(--cream-200);
-    font-size:.78rem; letter-spacing:.03em; padding:.42rem .85rem; border-radius:999px;
-    border:1px solid transparent; transition:background .15s,border-color .15s,color .15s;
+  .menu-trigger:hover{ border-color:var(--gold-400); color:var(--gold-300); }
+  .menu-trigger:focus-visible{ outline:2px solid var(--gold-400); outline-offset:2px; }
+  .menu-trigger svg{ width:11px; height:11px; transition:transform .2s; flex-shrink:0; }
+  .menu-drop.open .menu-trigger svg{ transform:rotate(180deg); }
+  .menu-drop.open .menu-trigger{ border-color:var(--gold-400); color:var(--gold-300); }
+
+  .menu-panel{
+    position:absolute; top:calc(100% + 10px); left:0; z-index:50;
+    background:var(--navy-900); border:1px solid var(--navy-line); border-radius:6px;
+    box-shadow:var(--shadow); padding:.6rem; width:min(560px,88vw);
+    display:grid; grid-template-columns:repeat(2,1fr); gap:.15rem;
   }
-  nav.pills a:hover{ color:var(--gold-300); }
-  nav.pills a.active{ background:rgba(201,162,39,.14); border-color:rgba(201,162,39,.55); color:var(--gold-300); }
-  nav.pills a:focus-visible{ outline:2px solid var(--gold-400); outline-offset:2px; }
+  @media (min-width:520px){ .menu-panel{ grid-template-columns:repeat(3,1fr); } }
+  .menu-panel[hidden]{ display:none; }
+  .menu-panel a{
+    display:flex; align-items:center; text-decoration:none; color:var(--cream-200);
+    font-size:.85rem; padding:.6rem .7rem; border-radius:4px; transition:background .15s,color .15s;
+  }
+  .menu-panel a:hover,.menu-panel a:focus-visible{ background:rgba(201,162,39,.14); color:var(--gold-300); outline:none; }
+  .menu-panel a.active{ color:var(--gold-400); }
+  .menu-panel .panel-divider{ grid-column:1/-1; border-top:1px solid var(--navy-line); margin:.4rem .2rem; }
+  .menu-panel a.events-link{ color:var(--gold-400); font-weight:600; }
 
   .search-wrap{ position:relative; flex-shrink:0; }
   .search-wrap input{
@@ -148,6 +165,32 @@
   .pick-card .pk-price{ color:var(--gold-300); font-variant-numeric:tabular-nums; font-size:.92rem; flex-shrink:0; }
   .pick-card .pk-desc{ color:var(--cream-200); font-size:.85rem; line-height:1.55; margin:0; }
   .pick-card .pk-tag{ font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:var(--gold-400); }
+
+  /* ---------- banquet / catering ---------- */
+  .events{
+    background:var(--navy-800); border-bottom:1px solid var(--navy-line); padding:2.6rem 1.25rem;
+  }
+  .events-inner{
+    max-width:920px; margin:0 auto; display:grid; gap:1.8rem; align-items:center;
+    grid-template-columns:1.1fr .9fr;
+  }
+  @media (max-width:760px){ .events-inner{ grid-template-columns:1fr; text-align:center; } }
+  .events h2{ color:var(--cream-50); font-size:clamp(1.6rem,3.6vw,2.1rem); font-weight:500; }
+  .events .eyebrow{ font-size:.72rem; letter-spacing:.3em; text-transform:uppercase; color:var(--gold-400); }
+  .events p.copy{ color:var(--cream-200); font-size:.95rem; line-height:1.7; margin:.7rem 0 0; max-width:46ch; }
+  @media (max-width:760px){ .events p.copy{ margin-inline:auto; } }
+  .events-card{
+    background:var(--navy-950); border:1px solid var(--navy-line); border-radius:6px; padding:1.6rem;
+    display:flex; flex-direction:column; gap:.9rem;
+  }
+  .events-card .ec-row{ display:flex; align-items:center; gap:.7rem; }
+  .events-card .ec-icon{ width:34px; height:34px; border-radius:50%; background:rgba(201,162,39,.14); color:var(--gold-400); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .events-card .ec-icon svg{ width:16px; height:16px; }
+  .events-card .ec-label{ font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-500); }
+  .events-card .ec-value{ color:var(--cream-50); font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600; }
+  .events-card .ec-value a{ text-decoration:none; color:inherit; }
+  .events-card .ec-value a:hover{ color:var(--gold-300); }
+  .events-card .btn{ justify-content:center; margin-top:.2rem; }
 
   /* ---------- legend bar ---------- */
   .legend{
@@ -247,7 +290,13 @@
       <span class="brand-word">Mak's Kitchen</span>
       <span class="brand-sub">Multi&#8209;Cuisine</span>
     </a>
-    <nav class="pills" id="pillNav" aria-label="Menu categories"></nav>
+    <div class="menu-drop" id="menuDrop">
+      <button class="menu-trigger" id="menuTrigger" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="menuPanel">
+        Menu
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </button>
+      <div class="menu-panel" id="menuPanel" role="menu" hidden></div>
+    </div>
     <div class="search-wrap">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
       <input id="dishSearch" type="search" placeholder="Search a dish…" aria-label="Search the menu">
@@ -268,6 +317,7 @@
     <a class="btn btn-gold" href="tel:+919030201028">Call to Reserve</a>
     <a class="btn btn-outline" href="https://www.google.com/maps/search/?api=1&query=Mak%27s%20Kitchen%2C%2010-3-76%2C%204th%20Floor%2C%20Opp.%20Pillar%20No.%203%2C%20PVNR%20Expressway%2C%20Humayun%20Nagar%2C%20Mehdipatnam%20Road%2C%20Hyderabad%20-%2028" target="_blank" rel="noopener">Get Directions</a>
     <a class="btn btn-outline" href="#menu-legend">View Full Menu</a>
+    <a class="btn btn-outline" href="#events">Book Banquet / Catering</a>
   </div>
 </section>
 
@@ -277,6 +327,27 @@
     <h2>A Few House Favourites</h2>
   </div>
   <div class="pick-grid" id="pickGrid"></div>
+</section>
+
+<section class="events" id="events">
+  <div class="events-inner">
+    <div>
+      <p class="eyebrow">Private Events</p>
+      <h2>Book the Banquet Hall or Order Catering</h2>
+      <p class="copy">Mak's Kitchen keeps a separate banquet hall for family functions and small get-togethers, and caters the full menu for larger events anywhere in the city. Call the number below to check dates and talk through your spread.</p>
+    </div>
+    <div class="events-card">
+      <div class="ec-row">
+        <span class="ec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></span>
+        <div>
+          <div class="ec-label">Banquet &amp; Catering Enquiries</div>
+          <div class="ec-value"><a href="tel:+919030201028">+91 90302 01028</a></div>
+        </div>
+      </div>
+      <a class="btn btn-gold" href="tel:+919030201028">Call to Book</a>
+      <a class="btn btn-outline" href="mailto:makskitchen001@gmail.com?subject=Banquet%20%2F%20Catering%20Enquiry">Email the Details</a>
+    </div>
+  </div>
 </section>
 
 <div class="legend" id="menu-legend">
@@ -641,7 +712,7 @@ const PICKS = [
 ];
 
 /* ---------- render ---------- */
-const pillNav = document.getElementById("pillNav");
+const menuPanel = document.getElementById("menuPanel");
 const menuRoot = document.getElementById("menuRoot");
 const pickGrid = document.getElementById("pickGrid");
 
@@ -649,7 +720,8 @@ MENU.forEach(cat=>{
   const a = document.createElement("a");
   a.href = "#"+cat.id;
   a.textContent = cat.label;
-  pillNav.appendChild(a);
+  a.setAttribute("role","menuitem");
+  menuPanel.appendChild(a);
 
   const section = document.createElement("section");
   section.className = "category";
@@ -701,6 +773,42 @@ MENU.forEach(cat=>{
   menuRoot.appendChild(section);
 });
 
+const divider = document.createElement("div");
+divider.className = "panel-divider";
+menuPanel.appendChild(divider);
+const eventsLink = document.createElement("a");
+eventsLink.href = "#events";
+eventsLink.textContent = "Book Banquet / Catering";
+eventsLink.className = "events-link";
+eventsLink.setAttribute("role","menuitem");
+menuPanel.appendChild(eventsLink);
+
+/* ---------- dropdown open/close ---------- */
+const menuDrop = document.getElementById("menuDrop");
+const menuTrigger = document.getElementById("menuTrigger");
+function openMenu(){
+  menuDrop.classList.add("open");
+  menuTrigger.setAttribute("aria-expanded","true");
+  menuPanel.hidden = false;
+}
+function closeMenu(){
+  menuDrop.classList.remove("open");
+  menuTrigger.setAttribute("aria-expanded","false");
+  menuPanel.hidden = true;
+}
+menuTrigger.addEventListener("click", ()=>{
+  menuPanel.hidden ? openMenu() : closeMenu();
+});
+document.addEventListener("click", (e)=>{
+  if(!menuDrop.contains(e.target)) closeMenu();
+});
+document.addEventListener("keydown", (e)=>{
+  if(e.key === "Escape") closeMenu();
+});
+menuPanel.addEventListener("click", (e)=>{
+  if(e.target.tagName === "A") closeMenu();
+});
+
 PICKS.forEach(p=>{
   const card = document.createElement("a");
   card.href = "#"+p.cat;
@@ -713,8 +821,8 @@ PICKS.forEach(p=>{
   pickGrid.appendChild(card);
 });
 
-/* ---------- active pill on scroll ---------- */
-const pillLinks = Array.from(pillNav.querySelectorAll("a"));
+/* ---------- active link on scroll ---------- */
+const pillLinks = Array.from(menuPanel.querySelectorAll("a[href^='#']")).filter(a=>a.getAttribute("href") !== "#events");
 const sections = MENU.map(c=>document.getElementById(c.id));
 const io = new IntersectionObserver((entries)=>{
   entries.forEach(entry=>{
